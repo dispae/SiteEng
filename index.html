@@ -2273,4 +2273,28 @@ Error generating stack: `+s.message+`
 })();
 </script>
 
+<style id="design-v34-tablet-hero">
+/* Portrait tablets (768-1279px wide, taller than wide): the two-column hero left more than half of the
+   first screen empty. Here it becomes one centred column like on phones, just larger: label, headline,
+   text and button on top, the photo filling the rest of the screen down to its bottom edge.
+   Phones, landscape tablets and computers are not affected. */
+@media (min-width:768px) and (max-width:1279.98px) and (orientation:portrait){
+section[class="relative min-h-screen flex items-center justify-center px-4 sm:px-6"]{ min-height:100vh !important; min-height:100svh !important; padding-top:36px !important; padding-bottom:0 !important; align-items:stretch !important; }
+div[class^="relative z-10 max-w-7xl mx-auto grid"]{ grid-template-columns:1fr !important; margin-top:0 !important; max-width:760px !important; row-gap:clamp(24px,2.6svh,40px) !important;
+  align-content:space-between !important; justify-items:center !important; }
+div[class="space-y-4 md:space-y-6 lg:space-y-8 order-2 lg:order-1"]{ order:1 !important; text-align:center !important; padding-top:clamp(8px,3svh,56px); }
+div[class="space-y-4 md:space-y-6 lg:space-y-8 order-2 lg:order-1"] h1{ font-size:clamp(3.6rem, 8.4vw, 5.6rem) !important; line-height:1.07 !important; }
+div[class="space-y-4 md:space-y-6 lg:space-y-8 order-2 lg:order-1"] p{ margin-left:auto !important; margin-right:auto !important; }
+p[class="text-base sm:text-lg md:text-xl text-[#4A4A4A]/70 font-light leading-relaxed max-w-lg"]{ font-size:clamp(1.3rem,2.5vw,1.75rem) !important; }
+p[class="text-sm sm:text-base md:text-lg text-[#4A4A4A]/80 leading-relaxed max-w-md font-light"]{ font-size:clamp(1.15rem,2.2vw,1.5rem) !important; max-width:min(40rem,80vw) !important; }
+#hero-online > span{ font-size:14px !important; }
+.hero-cta-wrap button{ padding:clamp(1.2rem,2.2vw,1.5rem) clamp(2.6rem,5vw,3.6rem) !important; }
+.hero-cta-wrap button span{ font-size:clamp(1.15rem,2vw,1.4rem) !important; }
+.hero-cta-wrap > a.hero-proof{ font-size:clamp(15px,1.8vw,18px) !important; }
+div[class="relative w-full order-1 lg:order-2"]{ order:2 !important; width:100% !important; max-width:min(700px, 78vw, calc((100svh - 612px) * 1.14)) !important; margin:0 auto !important; align-self:end !important; }
+div[class="absolute bottom-6 md:bottom-10 left-1/2 transform -translate-x-1/2"]{ display:none !important; }
+div[class="relative cursor-pointer w-full max-w-none"]::after{ display:none !important; }
+div[class="relative cursor-pointer w-full max-w-none"] > img{ -webkit-mask-image:linear-gradient(to bottom,#000 74%,rgba(0,0,0,.88) 87%,rgba(0,0,0,.45) 93.5%,rgba(0,0,0,.1) 98%,transparent 100%); mask-image:linear-gradient(to bottom,#000 74%,rgba(0,0,0,.88) 87%,rgba(0,0,0,.45) 93.5%,rgba(0,0,0,.1) 98%,transparent 100%); }
+}
+</style>
 </body></html>
