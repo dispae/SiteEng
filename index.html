@@ -2028,6 +2028,12 @@ html, body, button, input, textarea{ font-family: 'Onest', system-ui, -apple-sys
 @media (min-width: 640px){.fab-label{display:inline-block}}
 
 body{background:#FAF9F6;color:#4A4A4A;font-size:16px}</style>
+<style id="design-v36-load-order">
+/* The footer is plain HTML placed right after the (still empty) app container, so on a slow
+   connection it used to show up alone at the top of the page for a few seconds while the
+   main script was still downloading. Keep it hidden until the app has rendered. */
+#root:empty + #site-footer-addon{ display: none !important; }
+</style>
 <div id="root"></div>
 <footer id="site-footer-addon" class="ft">
   <div class="ft-in">
