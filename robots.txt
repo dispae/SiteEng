@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.dariaodintsova.ru/sitemap.xml
+Sitemap: https://daria-odintsova.ru/sitemap.xml
