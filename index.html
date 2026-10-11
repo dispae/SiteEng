@@ -1987,24 +1987,6 @@ html, body, button, input, textarea{ font-family: 'Onest', system-ui, -apple-sys
   }
 })();
 </script>
-<script id="design-v31-edu-speed">
-/* «Образование и опыт» on desktop: the page animates this block with the browser's
-   own animation engine (heading and photo 0.8s, list items 0.6s each, staggered -
-   about 1.3s in total). Play exactly those animations 1.5x faster (delays included),
-   so the same motion finishes in ~0.85s. Phones/tablets unchanged. */
-(function(){
-  var RATE = 1.5, mq = window.matchMedia ? window.matchMedia('(min-width: 1024px)') : null;
-  var orig = Element.prototype.animate;
-  if (!orig || !mq) return;
-  Element.prototype.animate = function(){
-    var a = orig.apply(this, arguments);
-    try { if (mq.matches && a && this.closest && this.closest('#sec-edu')) a.playbackRate = RATE; } catch (e) {}
-    return a;
-  };
-})();
-</script>
-
-
 <script id="design-v17-script">
 (function(){
   // proof line under the hero button -> smooth scroll to the reviews
@@ -2153,6 +2135,36 @@ body{background:#FAF9F6;color:#4A4A4A;font-size:16px}</style>
 })();
 </script>
 
+<style id="design-v38-motion">
+/* ===== v38: motion polish (Framer Motion inside the page script) ===== */
+.fx-w{ display: inline-block; }
+
+
+
+/* v40 (ui-ux-pro-max pass) */
+/* framer drives transform/opacity of these cards: CSS keeps animating only the shadow,
+   otherwise every frame is smoothed again by a 0.3s CSS transition (laggy hover) */
+div[class*="hover:shadow-2xl transition-all duration-300"]{ transition-property: box-shadow, background-color !important; }
+/* Отзывы: hidden only until its entrance starts (attribute removed by the script) */
+#reviews[data-fx-pre] .avr-eyebrow, #reviews[data-fx-pre] .avr-h2, #reviews[data-fx-pre] .avr-sub,
+#reviews[data-fx-pre] .avr-card, #reviews[data-fx-pre] .avr-arrow, #reviews[data-fx-pre] .avr-progress,
+#reviews[data-fx-pre] .avr-alllink{ opacity: 0; }
+/* the word spans inside the reviews heading keep the heading font (a broad rule sets Onest on everything inside the block) */
+.avr-section .avr-h2 .fx-w{ font-family: inherit !important; }
+/* visible keyboard focus in the site colour (2px ring) */
+#root a:focus-visible, #root button:focus-visible, #site-footer-addon a:focus-visible,
+#root [tabindex]:focus-visible{ outline: 2px solid #A55646 !important; outline-offset: 3px; border-radius: 6px; }
+/* «Проверено на Avito»: green text 2.8:1 -> 5:1 on its pale badge */
+.avr-badge{ color: #08784A !important; }
+/* small links/arrows get a 44px tap area without moving anything */
+.avr-arrow::after{ content: ""; position: absolute; inset: -6px; border-radius: 50%; }
+.avr-inline-more, .avr-alllink{ position: relative; }
+.avr-inline-more::after, .avr-alllink::after, .hero-cta-wrap > a.hero-proof::after{
+  content: ""; position: absolute; left: -6px; right: -6px; top: 50%; height: 44px; transform: translateY(-50%);
+}
+.hero-cta-wrap > a.hero-proof{ position: relative; }
+a, button{ touch-action: manipulation; }
+</style>
 <style id="design-v34-tablet-hero">
 /* Portrait tablets (768-1279px wide, taller than wide): the two-column hero left more than half of the
    first screen empty. Here it becomes one centred column like on phones, just larger: label, headline,
