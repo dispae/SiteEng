@@ -23,9 +23,12 @@
     return (n) => gl.getUniformLocation(pr, n);
   };
   /* общий цикл: рисуем ~24 раза в секунду и только пока блок на экране */
+  let lastScroll = 0;
+  addEventListener('scroll', () => { lastScroll = performance.now(); }, { passive: true });
   const loop = (el, draw, fps) => {
     let raf = 0, last = 0, vis = false;
-    const tick = (t) => { raf = requestAnimationFrame(tick); if (t - last < 1000 / fps) return; last = t; draw(t); };
+    /* пока страницу листают, фон не перерисовываем — вся мощность уходит на плавную прокрутку */
+    const tick = (t) => { raf = requestAnimationFrame(tick); if (t - last < 1000 / fps || performance.now() - lastScroll < 180) return; last = t; draw(t); };
     const sync = () => { const on = vis && !document.hidden && !reduce; if (on && !raf) raf = requestAnimationFrame(tick); if (!on && raf) { cancelAnimationFrame(raf); raf = 0; } };
     new IntersectionObserver(([e]) => { vis = e.isIntersecting; sync(); }).observe(el);
     document.addEventListener('visibilitychange', sync);
@@ -76,7 +79,7 @@ float d=length(p)*1.3;col=mix(bg,col,1.-smoothstep(.7,1.5,d)*.6);gl_FragColor=ve
       gl.viewport(0, 0, cv.width, cv.height); gl.uniform2f(ur, cv.width, cv.height);
     };
     fit(); new ResizeObserver(fit).observe(hero);
-    loop(hero, (t) => { gl.uniform1f(ut, 400 + t * 0.001 * 30); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4); }, 24);
+    loop(hero, (t) => { gl.uniform1f(ut, 400 + t * 0.001 * 30); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4); }, phone ? 15 : 24);
     requestAnimationFrame(() => requestAnimationFrame(() => host.classList.add('is-on')));
   });
 
@@ -98,7 +101,8 @@ gl_FragColor=vec4(mix(mix(c[0],c[1],m),mix(c[2],c[3],m),w),1.);}`;
     { colors: ['#D09A86', '#F4D4C4', '#B07462', '#FBEAE1'], prop: 0.38, soft: 0.95, dist: 0.16, swirl: 0.85, iters: 11, shape: 0, sc: 0.11 },
     { colors: ['#C7A07A', '#EDD6B9', '#A47C55', '#F7EAD8'], prop: 0.42, soft: 1.0, dist: 0.19, swirl: 0.75, iters: 9, shape: 1, sc: 0.13 },
   ];
-  if (C.b) ready('.avr-benefits-grid', (grid) => {
+  /* «узор при наведении» на телефоне не нужен: наведения там нет */
+  if (C.b && !(C.b === 3 && phone)) ready('.avr-benefits-grid', (grid) => {
     const sec = grid.closest('section') || grid;
     sec.setAttribute('data-efx-b', C.b);
     /* Один WebGL на все карточки: рисуем узор каждой карточки по очереди и копируем в её холст */

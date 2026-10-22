@@ -126,8 +126,8 @@ html body div[class~="cursor-pointer"][class~="max-w-none"]::after { content: no
 @media (prefers-reduced-motion: reduce) { [data-efx-burst] .efx-splash path { animation: none; } .efx-roll-line > span { transition: none; } }
 /* свой блик внутри кнопки — по форме кнопки, раз в несколько секунд */
 [data-efx-3d] > div:first-of-type { overflow: hidden; }
-[data-efx-3d] > div:first-of-type::after { content: ""; position: absolute; top: 0; bottom: 0; left: -40%; width: 30%; transform: skewX(-20deg); background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .35), transparent); animation: efxSheen 6s ease-in-out infinite; }
-@keyframes efxSheen { 0%, 72% { left: -40%; } 100% { left: 130%; } }
+[data-efx-3d] > div:first-of-type::after { content: ""; position: absolute; top: 0; bottom: 0; left: 0; width: 30%; transform: translateX(-140%) skewX(-20deg); will-change: transform; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .35), transparent); animation: efxSheen 6s ease-in-out infinite; }
+@keyframes efxSheen { 0%, 72% { transform: translateX(-140%) skewX(-20deg); } 100% { transform: translateX(440%) skewX(-20deg); } }
 @media (prefers-reduced-motion: reduce) { [data-efx-3d] > div:first-of-type::after { animation: none; display: none; } }
 
 /* ---------- Подвал: без разрыва с блоком «Готовы начать», живые кнопки ---------- */
@@ -205,14 +205,16 @@ html body div[class~="cursor-pointer"][class~="max-w-none"]::after { content: no
 }
 
 /* ---------- Неоновая рамка ---------- */
-.efx-neon { position: absolute; inset: 0; z-index: 5; border-radius: inherit; pointer-events: none; opacity: 0; transition: opacity .35s; }
+/* рамка существует только пока светится — в остальное время браузер её не рисует */
+.efx-neon { position: absolute; inset: 0; z-index: 5; border-radius: inherit; pointer-events: none; display: none; }
 .efx-neon::before, .efx-neon::after { content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1.5px;
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
 .efx-neon::before { background: radial-gradient(220px circle at var(--nx, 50%) var(--ny, 50%), #E8946F, rgba(212, 175, 122, .9) 35%, transparent 70%); }
 .efx-neon::after { padding: 3px; filter: blur(6px); opacity: .7; background: radial-gradient(180px circle at var(--nx, 50%) var(--ny, 50%), #F0A07C, transparent 70%); }
-[data-lit] > .efx-neon { opacity: 1; }
+[data-lit] > .efx-neon { display: block; animation: efxNeonIn .35s ease; }
+@keyframes efxNeonIn { from { opacity: 0; } }
 /* касание на телефоне: вся рамка вспыхивает и гаснет */
-[data-tap] > .efx-neon { opacity: 1; animation: efxNeonTap 1.4s ease-out forwards; }
+[data-tap] > .efx-neon { display: block; animation: efxNeonTap 1.4s ease-out forwards; }
 [data-tap] > .efx-neon::before { background: conic-gradient(from 0deg at var(--nx, 50%) var(--ny, 50%), #E8946F, #D4AF7A, #F4C7A8, #C17B6C, #E8946F); }
 [data-tap] > .efx-neon::after { background: conic-gradient(from 0deg at var(--nx, 50%) var(--ny, 50%), #E8946F, #D4AF7A, #C17B6C, #E8946F); }
 @keyframes efxNeonTap { 0% { opacity: 0; } 15% { opacity: 1; } 60% { opacity: 1; } 100% { opacity: 0; } }
