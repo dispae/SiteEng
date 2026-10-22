@@ -3,7 +3,7 @@
    u — рисованное подчёркивание, f — рукописный шрифт у подчёркнутого слова, k — «нажатие» кнопок. */
 (() => {
   /* Что включено. g — цвет градиента, b — вариант узора в «Чем помогут», u — подчёркивание (2 = ещё и «испанского») */
-  const C = { g: 1, p: 1, b: 3, n: 1, r: 1, e: 1, u: 2, f: 0, d: 1, c: 0, m: 0, t: 0, o: 0 };
+  const C = { g: 1, p: 0, b: 3, n: 1, r: 1, e: 1, u: 2, f: 0, d: 1, c: 0, m: 0, t: 0, o: 0 };
 
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const phone = matchMedia('(max-width: 767px), (hover: none)').matches;
