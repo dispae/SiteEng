@@ -328,7 +328,7 @@ gl_FragColor=vec4(mix(mix(c[0],c[1],m),mix(c[2],c[3],m),w),1.);}`;
 
   /* ---------- 15. Неоновая рамка: светится вокруг курсора, на телефоне вспыхивает от касания ---------- */
   if (C.n) {
-    const SEL = '.avr-card, .avr-benefits-grid > div, #sec-edu .rounded-2xl.overflow-hidden, #sec-edu .bg-white.rounded-2xl, #sec-certs .group, #sec-lessons .group';
+    const SEL = '.avr-card, .avr-benefits-grid > div, #sec-edu .rounded-2xl.overflow-hidden, #sec-edu .bg-white.rounded-2xl';
     const attach = (el) => {
       if (el.dataset.neon) return; el.dataset.neon = '1';
       if (getComputedStyle(el).position === 'static') el.style.position = 'relative';
@@ -356,4 +356,50 @@ gl_FragColor=vec4(mix(mix(c[0],c[1],m),mix(c[2],c[3],m),w),1.);}`;
 
   /* ---------- 16. Старый подвал, чуть аккуратнее ---------- */
   if (!C.o) root.classList.add('efx-ft-polish');
+
+  /* ---------- 20. Просмотр фото: плавное приближение из карточки, зум работает, клик по фото не закрывает ---------- */
+  {
+    let fromRect = null, downOnImg = false, downX = 0, downY = 0;
+    const lbx = () => document.querySelector('.lbx');
+    /* запоминаем, где было фото в карточке, чтобы «вырасти» из него */
+    document.addEventListener('click', (e) => {
+      const card = e.target.closest && e.target.closest('#sec-certs .group, #sec-lessons .group');
+      if (!card) return;
+      const im = card.querySelector('img');
+      fromRect = im ? im.getBoundingClientRect() : null;
+    }, true);
+    const grow = (img) => {
+      if (!fromRect || reduce) return;
+      const to = img.getBoundingClientRect();
+      if (!to.width || !to.height) return;
+      const s = Math.min(fromRect.width / to.width, fromRect.height / to.height);
+      const dx = fromRect.left + fromRect.width / 2 - (to.left + to.width / 2);
+      const dy = fromRect.top + fromRect.height / 2 - (to.top + to.height / 2);
+      img.animate([{ transform: `translate(${dx}px, ${dy}px) scale(${s})`, opacity: 0.6 }, { transform: 'none', opacity: 1 }], { duration: 480, easing: 'cubic-bezier(.2, .8, .2, 1)' });
+      fromRect = null;
+    };
+    const hook = (box) => {
+      if (box.__efx) return; box.__efx = true;
+      const img = box.querySelector('.lbx-img');
+      new MutationObserver(() => {
+        if (!box.classList.contains('is-open')) return;
+        if (img.complete && img.naturalWidth) requestAnimationFrame(() => grow(img));
+        else img.addEventListener('load', () => grow(img), { once: true });
+      }).observe(box, { attributes: true, attributeFilter: ['class'] });
+      /* нажатие по самому фото — это зум, а не «закрыть» */
+      box.addEventListener('pointerdown', (e) => { downOnImg = e.target === img; downX = e.clientX; downY = e.clientY; }, true);
+      box.addEventListener('click', (e) => {
+        if (!downOnImg) return;
+        e.stopPropagation();
+        const moved = Math.abs(e.clientX - downX) + Math.abs(e.clientY - downY) > 6;
+        if (moved || Date.now() - (box._gestureEnd || 0) < 350) return;
+        const touch = e.pointerType === 'touch' || (e.sourceCapabilities && e.sourceCapabilities.firesTouchEvents);
+        /* мышь: клик по фото приближает и отдаляет; палец: двойной тап приближает (это делает сам сайт), один тап по приближенному фото — отдаляет */
+        if (!touch || box.classList.contains('is-zoomed')) img.dispatchEvent(new MouseEvent('dblclick', { bubbles: false, clientX: e.clientX, clientY: e.clientY }));
+      }, true);
+      box.addEventListener('dblclick', (e) => { if (e.isTrusted) { e.stopPropagation(); e.preventDefault(); } }, true);
+    };
+    const find = () => { const b = lbx(); if (b) hook(b); return !!b; };
+    if (!find()) { const mo = new MutationObserver(() => { if (find()) mo.disconnect(); }); mo.observe(document.body, { childList: true, subtree: true }); }
+  }
 })();

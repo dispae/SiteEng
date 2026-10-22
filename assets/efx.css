@@ -286,9 +286,13 @@ html body #sec-certs [data-efx-pc] > div:first-child img { position: absolute !i
 html body #sec-lessons [data-efx-pc] > div:first-child { background: #F4EFE8 !important; }
 html.efx-cv3 body #sec-certs [data-efx-pc] > div:first-child, html.efx-mv3 body #sec-lessons [data-efx-pc] > div:first-child { background: #FBF8F3 !important; }
 
-/* ---------- Сертификаты и «Как проходят занятия»: исходный вид, только плавнее ---------- */
-.efx-soft #sec-certs .group, .efx-soft #sec-lessons .group { transition: transform .6s cubic-bezier(.2, .8, .2, 1), box-shadow .6s ease !important; }
-.efx-soft #sec-certs .group:hover, .efx-soft #sec-lessons .group:hover { transform: translateY(-4px); box-shadow: 0 2px 4px rgba(60, 40, 30, .05), 0 28px 48px -26px rgba(90, 50, 40, .45) !important; }
-.efx-soft #sec-certs .group img, .efx-soft #sec-lessons .group img { transition: transform 1.1s cubic-bezier(.2, .8, .2, 1) !important; }
-.efx-soft #sec-certs .group:hover img, .efx-soft #sec-lessons .group:hover img { transform: scale(1.04) !important; }
-@media (hover: none) { .efx-soft #sec-certs .group:hover, .efx-soft #sec-lessons .group:hover { transform: none; } }
+/* ---------- Сертификаты и «Как проходят занятия»: исходный вид без лупы и без зума внутри карточки ---------- */
+.efx-soft #sec-certs .group > div:first-child::after, .efx-soft #sec-lessons .group > div:first-child::after,
+.efx-soft #sec-certs .group > div:first-child::before, .efx-soft #sec-lessons .group > div:first-child::before { display: none !important; }
+.efx-soft #sec-certs .group img, .efx-soft #sec-lessons .group img { transform: none !important; transition: transform .6s cubic-bezier(.2, .8, .2, 1), filter .4s ease !important; }
+.efx-soft #sec-certs .group:hover img { transform: translateY(-4px) !important; }
+.efx-soft #sec-lessons .group { transition: transform .6s cubic-bezier(.2, .8, .2, 1), box-shadow .6s ease !important; }
+@media (hover: hover) { .efx-soft #sec-lessons .group:hover { transform: translateY(-4px); } }
+/* в просмотре фото курсор подсказывает зум */
+.lbx .lbx-img { cursor: zoom-in; }
+.lbx.is-zoomed .lbx-img { cursor: grab; }
