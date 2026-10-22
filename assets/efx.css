@@ -3,7 +3,7 @@
 /* ---------- Градиент на первом экране ---------- */
 [data-efx-hero] { isolation: isolate; }
 .efx-grad { position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: 0; transition: opacity 1.6s ease;
-  -webkit-mask-image: linear-gradient(to bottom, #000 86%, transparent 100%); mask-image: linear-gradient(to bottom, #000 86%, transparent 100%); }
+  -webkit-mask-image: linear-gradient(to bottom, #000 55%, rgba(0, 0, 0, .55) 75%, rgba(0, 0, 0, .15) 90%, transparent 100%); mask-image: linear-gradient(to bottom, #000 55%, rgba(0, 0, 0, .55) 75%, rgba(0, 0, 0, .15) 90%, transparent 100%); }
 .efx-grad.is-on { opacity: 1; }
 .efx-grad canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 /* слева светлее, чтобы заголовок и текст читались */
@@ -120,14 +120,12 @@ html body div[class~="cursor-pointer"][class~="max-w-none"]::after { content: no
 [data-efx-3d]:hover .efx-outline rect { stroke-dashoffset: 0; opacity: 1; }
 .efx-splash { position: absolute; left: 50%; top: 50%; width: 150%; height: auto; aspect-ratio: 342 / 208; translate: -50% -50%; overflow: visible; pointer-events: none; z-index: -1; stroke: #D4AF7A; }
 .efx-splash path { stroke-dasharray: 1 1; stroke-dashoffset: 1; opacity: 0; }
-[data-efx-burst] .efx-splash path { opacity: 1; }
 [data-efx-burst] .efx-splash path { animation: efxSplash .75s cubic-bezier(.3, 0, .2, 1) forwards; }
-@keyframes efxSplash { 0% { stroke-dashoffset: 1; } 45% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: -1; } }
+/* в конце брызги гаснут полностью, чтобы не оставались точки */
+@keyframes efxSplash { 0% { stroke-dashoffset: 1; opacity: 1; } 45% { stroke-dashoffset: 0; opacity: 1; } 85% { opacity: 1; } 100% { stroke-dashoffset: -1; opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { [data-efx-burst] .efx-splash path { animation: none; } .efx-roll-line > span { transition: none; } }
 /* свой блик внутри кнопки — по форме кнопки, раз в несколько секунд */
 [data-efx-3d] > div:first-of-type { overflow: hidden; }
-[data-efx-3d] > div:first-of-type::after { content: ""; position: absolute; top: 0; bottom: 0; left: 0; width: 30%; transform: translateX(-140%) skewX(-20deg); will-change: transform; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .35), transparent); animation: efxSheen 6s ease-in-out infinite; }
-@keyframes efxSheen { 0%, 72% { transform: translateX(-140%) skewX(-20deg); } 100% { transform: translateX(440%) skewX(-20deg); } }
 @media (prefers-reduced-motion: reduce) { [data-efx-3d] > div:first-of-type::after { animation: none; display: none; } }
 
 /* ---------- Подвал: без разрыва с блоком «Готовы начать», живые кнопки ---------- */
@@ -303,3 +301,21 @@ html.efx-cv3 body #sec-certs [data-efx-pc] > div:first-child, html.efx-mv3 body 
 /* сертификаты чуть крупнее (~18% для вертикальных) */
 html.efx-soft body #sec-certs .group > div:first-child { aspect-ratio: 6 / 5 !important; }
 html.efx-soft body #sec-certs .group > div:first-child img { padding: 8px !important; }
+
+/* блик на кнопках «Записаться» — внутри кнопки, по её форме (на телефоне тоже) */
+.efx-shine { position: absolute; inset: 0; z-index: 1; border-radius: inherit; overflow: hidden; pointer-events: none; }
+.efx-shine::after { content: ""; position: absolute; top: 0; bottom: 0; left: 0; width: 35%; transform: translateX(-160%) skewX(-20deg); will-change: transform;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .45), transparent); animation: efxShine 3.6s ease-in-out infinite; }
+@keyframes efxShine { 0%, 55% { transform: translateX(-160%) skewX(-20deg); } 100% { transform: translateX(420%) skewX(-20deg); } }
+@media (prefers-reduced-motion: reduce) { .efx-shine::after { animation: none; display: none; } }
+
+/* переход от первого экрана: подложка сайта тоже плавно уходит в фон */
+.efx-soft #root section:first-of-type > div[class^="absolute inset-0 bg-gradient-to-br"] { -webkit-mask-image: linear-gradient(to bottom, #000 60%, transparent 100%); mask-image: linear-gradient(to bottom, #000 60%, transparent 100%); }
+
+/* фото на первом экране: приближение при наведении/касании медленное и мягкое */
+html.efx-soft #root div[class="relative cursor-pointer w-full max-w-none"] { transform: none !important; }
+html.efx-soft #root div[class="relative cursor-pointer w-full max-w-none"] > img { transition: transform 1.4s cubic-bezier(.2, .8, .2, 1); transform-origin: 50% 60%; }
+@media (hover: hover) { html.efx-soft #root div[class="relative cursor-pointer w-full max-w-none"]:hover > img { transform: scale(1.04); } }
+/* фон первого экрана на всю ширину окна (у секции бывает на 15px уже — оставалась полоска справа) */
+.efx-grad { right: auto; width: 100vw; }
+.efx-soft #root section:first-of-type > div[class^="absolute inset-0 bg-gradient-to-br"] { right: auto; width: 100vw; }

@@ -191,6 +191,7 @@ gl_FragColor=vec4(mix(mix(c[0],c[1],m),mix(c[2],c[3],m),w),1.);}`;
       label.classList.add('efx-roll');
       label.innerHTML = letters(t, 'efx-roll-a') + letters('Написать Дарье', 'efx-roll-b');
     }
+    b.insertAdjacentHTML('beforeend', '<span class="efx-shine" aria-hidden="true"></span>');
     if (phone) return;
     b.insertAdjacentHTML('beforeend', SPLASH + '<svg class="efx-outline" aria-hidden="true"><rect pathLength="1"/></svg>');
     const fit = () => { const r = b.querySelector('.efx-outline rect'), w = b.offsetWidth + 12, h = b.offsetHeight + 12; r.setAttribute('x', 1.5); r.setAttribute('y', 1.5); r.setAttribute('width', w - 3); r.setAttribute('height', h - 3); r.setAttribute('rx', (h - 3) / 2); };
