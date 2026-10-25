@@ -2017,6 +2017,62 @@ body{background:#FAF9F6;color:#4A4A4A;font-size:16px}</style>
    main script was still downloading. Keep it hidden until the app has rendered. */
 #root:empty + #site-footer-addon{ display: none !important; }
 </style>
+<style id="quiz-block-style">
+.qz-section{ position: relative; padding: 56px 16px; text-align: center; }
+@media (min-width:768px){ .qz-section{ padding: 72px 24px; } }
+.qz-wrap{ max-width: 720px; margin: 0 auto; }
+.qz-h{ font-family: 'Yeseva One', Georgia, serif; font-size: 1.75rem; font-weight: 400; color: #4A4A4A; margin: 0 0 12px; line-height: 1.2; }
+@media (min-width:768px){ .qz-h{ font-size: 2.25rem; } }
+.qz-p{ font-family: 'Onest', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 16px; color: #6B625D; margin: 0 auto 28px; max-width: 520px; line-height: 1.5; }
+.qz-btn{ font-family: 'Onest', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 1rem; font-weight: 500; letter-spacing: .02em; color: #fff; background: #A55646; border: 0; border-radius: 9999px; padding: 1rem 2.25rem; cursor: pointer; box-shadow: 0 10px 25px -8px rgba(165,86,70,.55); transition: transform .2s, box-shadow .2s, background-color .2s; }
+.qz-btn:hover{ background: #8F4739; transform: translateY(-2px); box-shadow: 0 14px 28px -8px rgba(165,86,70,.6); }
+.hero-cta-wrap button.qz-btn-hero{ display: block !important; width: auto; margin-top: 12px; background: transparent !important; background-image: none !important; color: #A55646 !important; box-shadow: inset 0 0 0 1.5px #A55646 !important; padding: .85rem 2rem !important; font-size: 1rem !important; line-height: 1.25rem !important; }
+@media (max-width:639px){ .hero-cta-wrap button.qz-btn-hero{ width: 100%; } }
+.hero-cta-wrap button.qz-btn-hero:hover{ background: #A55646 !important; color: #fff !important; transform: none; }
+.hero-cta-wrap button.qz-btn-hero::after{ display: none !important; }
+.qz-btn:focus-visible{ outline: 2px solid #A55646; outline-offset: 3px; }
+</style>
+<script id="quiz-block-script">
+(function(){
+  var QZ = '6addd07ca505be000fbb28da';
+  /* Marquiz loader */
+  (function(w,d,s,o){var j=d.createElement(s);j.async=true;j.src='//script.marquiz.ru/v2.js';
+    j.onload=function(){if(d.readyState!=='loading')Marquiz.init(o);else d.addEventListener('DOMContentLoaded',function(){Marquiz.init(o);});};
+    d.head.insertBefore(j,d.head.firstElementChild);
+  })(window,document,'script',{host:'//quiz.marquiz.ru',region:'ru',id:QZ,autoOpen:false,autoOpenFreq:'once',openOnExit:false,disableOnMobile:false});
+
+  function make(id, title, text, btn){
+    var s = document.createElement('section');
+    s.className = 'qz-section'; s.id = id;
+    s.innerHTML = '<div class="qz-wrap"><h2 class="qz-h">'+title+'</h2><p class="qz-p">'+text+'</p>'+
+      '<button type="button" class="qz-btn" onclick="window.Marquiz&amp;&amp;Marquiz.showModal(&quot;'+QZ+'&quot;)">'+btn+'</button></div>';
+    return s;
+  }
+  function place(id, anchorSel, title, text, btn){
+    if (document.getElementById(id)) return true;
+    var a = document.querySelector(anchorSel);
+    if (!a || !a.parentNode) return false;
+    a.parentNode.insertBefore(make(id,title,text,btn), a.nextSibling);
+    return true;
+  }
+  function setup(){
+    var a = place('quiz-after-reviews', '.avr-mount', 'Подберу занятия под вашу цель', 'Ответьте на несколько вопросов — и я подскажу, с чего лучше начать.', 'Подобрать программу');
+    var w = document.querySelector('.hero-cta-wrap');
+    var h = !w || document.getElementById('quiz-hero');
+    if (!h) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.id = 'quiz-hero'; b.className = 'qz-btn qz-btn-hero';
+      b.textContent = 'Подобрать программу';
+      b.onclick = function(){ var t = document.getElementById('quiz-after-reviews'); if (t) t.scrollIntoView({ behavior: 'smooth', block: 'center' }); };
+      var proof = w.querySelector('.hero-proof');
+      w.insertBefore(b, proof);
+      h = true;
+    }
+    return a && h;
+  }
+  var n = 0, t = setInterval(function(){ if (setup() || ++n > 60) clearInterval(t); }, 200);
+})();
+</script>
 <div id="root"></div>
 <footer id="site-footer-addon" class="ft">
   <div class="ft-in">
